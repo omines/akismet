@@ -14,19 +14,20 @@ namespace Omines\Akismet;
 
 use Omines\Akismet\API\CheckResponse;
 use Omines\Akismet\API\VerifyKeyResponse;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-class Akismet
+class Akismet implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     private const API_BASE_URI = 'https://rest.akismet.com/1.1/';
 
     private HttpClientInterface $client;
-
     private ?string $apiKey;
-
     private ?string $instance;
-
     private bool $isTesting;
 
     public function __construct(HttpClientInterface $client, string $apiKey = null, string $instance = null, bool $isTesting = false)
@@ -42,12 +43,12 @@ class Akismet
 
     public function check(AkismetMessage $message): CheckResponse
     {
-        return new CheckResponse($this, $this->call('comment-check', $message->getValues()), $message);
+        return new CheckResponse($this, $this->call('comment-check', $message->getValues()), $this->logger, $message);
     }
 
     public function verifyKey(): VerifyKeyResponse
     {
-        return new VerifyKeyResponse($this, $this->call('verify-key'));
+        return new VerifyKeyResponse($this, $this->call('verify-key'), $this->logger);
     }
 
     public function getClient(): HttpClientInterface
@@ -107,8 +108,17 @@ class Akismet
             $parameters['is_test'] = 'true';
         }
 
-        return $this->client->request('POST', $method, [
+        $options = [
             'body' => $parameters,
-        ]);
+        ];
+        if (null === $this->logger) {
+            $options['on_progress'] = function (int $dlNow, int $dlSize, array $info) use ($method) {
+                $this->logger?->debug(sprintf('Akismet %s: Downloaded %s/%s bytes', $method, $dlNow, $dlSize), $info);
+            };
+        }
+
+        $this->logger?->info(sprintf('Calling %s method on Akismet with %d parameters', $method, count($parameters)), $parameters);
+
+        return $this->client->request('POST', $method, $options);
     }
 }

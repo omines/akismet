@@ -13,11 +13,14 @@ declare(strict_types=1);
 namespace Omines\Akismet\API;
 
 use Omines\Akismet\Akismet;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 abstract class Response
 {
-    public function __construct(protected readonly Akismet $akismet, protected readonly ResponseInterface $httpResponse)
+    public function __construct(protected readonly Akismet $akismet,
+        protected readonly ResponseInterface $httpResponse,
+        protected readonly ?LoggerInterface $logger)
     {
     }
 

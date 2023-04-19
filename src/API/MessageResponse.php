@@ -14,13 +14,14 @@ namespace Omines\Akismet\API;
 
 use Omines\Akismet\Akismet;
 use Omines\Akismet\AkismetMessage;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 abstract class MessageResponse extends Response
 {
-    public function __construct(Akismet $akismet, ResponseInterface $httpResponse, private readonly AkismetMessage $message)
+    public function __construct(Akismet $akismet, ResponseInterface $httpResponse, ?LoggerInterface $logger, private readonly AkismetMessage $message)
     {
-        parent::__construct($akismet, $httpResponse);
+        parent::__construct($akismet, $httpResponse, $logger);
     }
 
     public function getMessage(): AkismetMessage

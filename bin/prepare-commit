@@ -6,4 +6,5 @@ vendor/bin/php-cs-fixer fix
 vendor/bin/phpstan
 XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --display-errors --display-warnings
 
+echo
 echo 'All good, ready for commit!'

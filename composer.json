@@ -16,10 +16,12 @@
     },
     "require": {
         "php": ">=8.1",
+        "psr/log": "^3.0",
         "symfony/http-client-contracts": "^3"
     },
     "require-dev": {
         "ext-json": "*",
+        "ekino/phpstan-banned-code": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.16.0",
         "nyholm/psr7": "^1.6",
         "phpstan/extension-installer": "^1.3",

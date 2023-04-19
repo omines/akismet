@@ -17,6 +17,7 @@ use Omines\Akismet\Akismet;
 use Omines\Akismet\AkismetMessage;
 use Omines\Akismet\MessageType;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -134,6 +135,20 @@ class AkismetTest extends TestCase
         $this->assertFalse($response->shouldDiscard());
     }
 
+    public function testLogging(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('info')
+        ;
+
+        $this->akismet->setLogger($logger);
+
+        $response = $this->akismet->verifyKey();
+        $this->assertTrue($response->isValid());
+    }
+
     protected function setUp(): void
     {
         $this->akismet = new Akismet(HttpClient::create(), self::$apiKey, 'https://www.example.org/', true);
@@ -141,7 +156,7 @@ class AkismetTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        (new Dotenv())->bootEnv(dirname(__DIR__) . '/.env');
+        (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
 
         if (!array_key_exists('AKISMET_KEY', $_ENV)) {
             throw new \LogicException('Make sure the AKISMET_KEY env variable is set either through a .env.local file or actual environment variables');
