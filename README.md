@@ -13,9 +13,16 @@ Install the library with Composer:
 ```shell
 composer require omines/akismet
 ```
-You have to bring your own HTTP client implementation, based on `Symfony\Contracts\HttpClient\HttpClientInterface`.
-Easiest is to install the Symfony HTTP Client component `composer require symfony/http-client`. When using Symfony
-this gives you a configurable service you can inject where needed, otherwise you can instantiate one using:
+
+### Creating the service
+
+You have to bring your own HTTP client implementation, based on [Symfony Contracts](https://symfony.com/doc/current/components/contracts.html).
+Easiest is to install the [Symfony HTTP Client component](https://symfony.com/doc/current/http_client.html):
+```shell
+composer require symfony/http-client
+```
+When using the Symfony framework this will provide a configurable service you can inject where needed, otherwise you 
+can instantiate a client using:
 ```php
 $httpClient = HttpClient::create();
 ```
@@ -36,7 +43,7 @@ Add the following to `config/services.yaml`, assuming autowiring is enabled as i
             # Your Akismet API key
             $apiKey: '%env(AKISMET_KEY)%'
 ```
-Then make sure  your relevant `.env` file or the actual environment parameters contain correct values for `ROOT_URL`
+Then make sure your relevant `.env` file or the actual environment variables contain correct values for `ROOT_URL`
 and `AKISMET_KEY`. You can now inject `Omines\Akismet\Akismet` wherever you need it.
 
 ### Creating a message
@@ -51,7 +58,8 @@ $message = (new AkismetMessage())
 ;
 ```
 Depending on your framework you will already have some useful data available in either a Symfony HTTP Foundation `Request`
-instance or a PSR-7 `ServerRequestInterface` derivant. Bootstrapping a message from these is easy:
+instance or a PSR-7 `ServerRequestInterface` derivant. Bootstrapping a message from these to copy the user IP, user agent
+and HTTP referrer fields is easy:
 ```php
 $message = AkismetMessage::fromRequest($symfonyRequest);
 // or

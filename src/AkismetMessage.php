@@ -127,9 +127,9 @@ class AkismetMessage
     public static function fromRequest(Request $request): self
     {
         return (new self())
-            ->setUserIP($request->getClientIp() ?? '127.0.0.1')
-            ->setUserAgent($request->headers->get('User-Agent'))
             ->setReferrer($request->headers->get('Referer'))
+            ->setUserAgent($request->headers->get('User-Agent'))
+            ->setUserIP($request->getClientIp() ?? '127.0.0.1')
         ;
     }
 
@@ -138,9 +138,9 @@ class AkismetMessage
         $params = $request->getServerParams();
 
         return (new self())
-            ->setUserIP($params['REMOTE_ADDR'] ?? '127.0.0.1')
             ->setReferrer($params['HTTP_REFERER'] ?? null)
             ->setUserAgent($params['HTTP_USER_AGENT'] ?? null)
+            ->setUserIP($params['REMOTE_ADDR'] ?? '127.0.0.1')
         ;
     }
 }
