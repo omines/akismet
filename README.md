@@ -11,6 +11,22 @@ spam detection service.
 
 TBD.
 
+## Using as a Symfony service
+
+Add the following to `config/services.yaml`:
+
+```yaml
+    Omines\Akismet\Akismet:
+        arguments:
+            # Your 'blog', this should be the root URL of your deployment
+            $instance: '%env(ROOT_URL)%'
+
+            # Your Akismet API key
+            $apiKey: '%env(AKISMET_KEY)%'
+```
+Next add these 2 parameters to your `.env.local` or wherever else you manage
+your environment variables.
+
 ## Contributing
 
 Please see [CONTRIBUTING.md](https://github.com/omines/akismet/blob/master/CONTRIBUTING.md) for details.
