@@ -1,4 +1,4 @@
-# Akismet
+# Akismet Client Library for PHP
 [![Latest Stable Version](https://poser.pugx.org/omines/akismet/version)](https://packagist.org/packages/omines/akismet)
 [![Total Downloads](https://poser.pugx.org/omines/akismet/downloads)](https://packagist.org/packages/omines/akismet)
 [![Latest Unstable Version](https://poser.pugx.org/omines/akismet/v/unstable)](//packagist.org/packages/omines/akismet)
@@ -81,6 +81,7 @@ if ($response->isSpam()) {
     }
 }
 ```
+Read [their blog post](https://akismet.com/blog/theres-a-ninja-in-your-akismet/) on the 'should discard' feature.
 
 ### Asynchronous invocation
 
@@ -89,6 +90,20 @@ in the example above, the call to `Akismet::check` is **not** blocking further e
 your site performance by continuing to do other tasks in parallel, such as preparing notification emails and such.
 
 Execution will block when you call any informational methods on the response, in this case the `isSpam` method call.
+
+## To Do
+
+This library is currently internally being tested for production use, changes may be necessary, hence the library is
+currently in major version 0. It is to be considered stable and safe though, and we will stabilize the major version
+once we believe the library API to be sufficiently stable.
+
+Currently on the to do list are:
+ * Error handling
+ * Submit ham/spam call implementation
+ * Diagnostic calls for usage and API limits
+
+If more people start using the library we will at some point also provide a Symfony Bundle and corresponding recipes
+for even easier integration.
 
 ## Contributing
 
