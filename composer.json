@@ -2,7 +2,7 @@
     "name": "omines/akismet",
     "type": "library",
     "description": "Open source library for using the Wordpress Akismet anti spam service",
-    "keywords": ["akismet","spam", "spamfilter", "antispam"],
+    "keywords": ["akismet","spam", "spamfilter", "antispam", "api"],
     "license": "MIT",
     "authors": [
         {
@@ -32,6 +32,9 @@
         "symfony/dotenv": "^6.2.8",
         "symfony/http-client": "^6.2.9",
         "symfony/http-foundation": "^6.2"
+    },
+    "suggest": {
+        "symfony/http-client": "As asynchronous HTTP Client"
     },
     "autoload": {
         "psr-4": { "Omines\\Akismet\\": "src/"}
