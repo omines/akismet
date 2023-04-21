@@ -32,9 +32,10 @@ class AkismetTest extends TestCase
     public function testPropertiesAndOverrides(): void
     {
         // During testing the default testing value is true
-        $this->assertTrue($this->akismet->isTesting());
         $this->akismet->setTesting(false);
         $this->assertFalse($this->akismet->isTesting());
+        $this->akismet->setTesting(true);
+        $this->assertTrue($this->akismet->isTesting());
 
         $this->akismet->setApiKey('foo.bar');
         $this->assertSame('foo.bar', $this->akismet->getApiKey());

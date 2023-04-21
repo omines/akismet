@@ -98,7 +98,6 @@ currently in major version 0. It is to be considered stable and safe though, and
 once we believe the library API to be sufficiently stable.
 
 Currently on the to do list are:
- * Error handling
  * Submit ham/spam call implementation
  * Diagnostic calls for usage and API limits
 
