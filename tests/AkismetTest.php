@@ -53,22 +53,55 @@ class AkismetTest extends TestCase
             'HTTP_USER_AGENT' => 'Custom Browser 684',
         ]);
 
+        $created = new \DateTime('2023-02-03T12:34:56+02:00');
+        $modified = new \DateTimeImmutable('2023-03-04T23:45:01+05:00');
+
         $message = AkismetMessage::fromRequest($request)
             ->setAuthor('foo')
             ->setAuthorEmail('foo@bar.org')
+            ->setAuthorUrl('https://example.org')
             ->setContent('foo bar')
+            ->setDateCreated($created)
+            ->setDateModified($modified)
+            ->setEncoding('UTF-8')
+            ->setHoneyPot('hidden_field', 'Eric Jones')
+            ->setLanguages('en, nl_nl')
+            ->setPermalink('https://example.org/post/1')
+            ->setRecheckReason('edit')
             ->setType(MessageType::BLOG_POST)
             ->setUserRole('guest')
+            ->addContext('cooking')
+            ->addContext('recipes')
+            ->addContext('bbq')
         ;
 
         $this->assertSame('foo', $message->getAuthor());
         $this->assertSame('foo@bar.org', $message->getAuthorEmail());
+        $this->assertSame('https://example.org', $message->getAuthorUrl());
         $this->assertSame('foo bar', $message->getContent());
+        $this->assertEquals($created, $message->getDateCreated());
+        $this->assertEquals($modified, $message->getDateModified());
+        $this->assertSame('UTF-8', $message->getEncoding());
+        $this->assertSame('hidden_field', $message->getHoneyPotFieldName());
+        $this->assertSame('Eric Jones', $message->getHoneyPotValue());
+        $this->assertSame('en, nl_nl', $message->getLanguages());
+        $this->assertSame('https://example.org/post/1', $message->getPermalink());
+        $this->assertSame('edit', $message->getRecheckReason());
         $this->assertSame('https://www.google.com', $message->getReferrer());
         $this->assertSame(MessageType::BLOG_POST, $message->getType());
         $this->assertSame('Custom Browser 684', $message->getUserAgent());
         $this->assertSame('guest', $message->getUserRole());
         $this->assertSame('12.34.56.78', $message->getUserIP());
+
+        $this->assertCount(3, $message->getContext());
+        $this->assertSame('recipes', $message->getContext()[1]);
+
+        $message->clearHoneyPot();
+        $this->assertNull($message->getHoneyPotFieldName());
+        $this->assertNull($message->getHoneyPotValue());
+
+        $message->clearContext();
+        $this->assertCount(0, $message->getContext());
 
         $message->setReferrer(null);
         $this->assertNull($message->getReferrer());
@@ -129,6 +162,8 @@ class AkismetTest extends TestCase
             ->setAuthorEmail('akismet-guaranteed-spam@example.com')
             ->setContent('You have won $700.000 in our raffle, visit https://spam.ru for information!!!')
             ->setType(MessageType::REPLY)
+            ->addContext('bbq')
+            ->addContext('recipes')
         );
 
         $this->assertTrue($response->isSpam());

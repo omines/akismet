@@ -17,8 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AkismetMessage
 {
-    /** @var array<string, string> */
-    private array $values = [];
+    /** @var array{comment_context: string[]}&string[] */
+    private array $values; // @phpstan-ignore-line
+
+    public function __construct()
+    {
+        $this->values = [
+            'comment_context' => [],
+        ];
+    }
 
     public function getAuthor(): ?string
     {
@@ -40,6 +47,16 @@ class AkismetMessage
         return $this->set('comment_author_email', $email);
     }
 
+    public function getAuthorUrl(): ?string
+    {
+        return $this->get('comment_author_url');
+    }
+
+    public function setAuthorUrl(?string $url): static
+    {
+        return $this->set('comment_author_url', $url);
+    }
+
     public function getContent(): ?string
     {
         return $this->get('comment_content');
@@ -48,6 +65,90 @@ class AkismetMessage
     public function setContent(?string $content): static
     {
         return $this->set('comment_content', $content);
+    }
+
+    public function getDateCreated(): ?\DateTimeImmutable
+    {
+        $date = $this->get('comment_date_gmt');
+
+        return null !== $date ? new \DateTimeImmutable($date) : null;
+    }
+
+    public function setDateCreated(?\DateTimeInterface $date): static
+    {
+        return $this->set('comment_date_gmt', $date?->format('c'));
+    }
+
+    public function getDateModified(): ?\DateTimeImmutable
+    {
+        $date = $this->get('comment_post_modified_gmt');
+
+        return null !== $date ? new \DateTimeImmutable($date) : null;
+    }
+
+    public function setDateModified(?\DateTimeInterface $date): static
+    {
+        return $this->set('comment_post_modified_gmt', $date?->format('c'));
+    }
+
+    public function getEncoding(): ?string
+    {
+        return $this->get('blog_charset');
+    }
+
+    public function setEncoding(?string $encoding): static
+    {
+        return $this->set('blog_charset', $encoding);
+    }
+
+    public function clearHoneyPot(): static
+    {
+        return $this->set('honeypot_field_name', null)->set('hidden_honeypot_field', null);
+    }
+
+    public function getHoneyPotFieldName(): ?string
+    {
+        return $this->get('honeypot_field_name');
+    }
+
+    public function getHoneyPotValue(): ?string
+    {
+        return $this->get('hidden_honeypot_field');
+    }
+
+    public function setHoneyPot(string $fieldName, string $value): static
+    {
+        return $this->set('honeypot_field_name', $fieldName)->set('hidden_honeypot_field', $value);
+    }
+
+    public function getLanguages(): ?string
+    {
+        return $this->get('blog_lang');
+    }
+
+    public function setLanguages(?string $languages): static
+    {
+        return $this->set('blog_lang', $languages);
+    }
+
+    public function getPermalink(): ?string
+    {
+        return $this->get('permalink');
+    }
+
+    public function setPermalink(?string $permalink): static
+    {
+        return $this->set('permalink', $permalink);
+    }
+
+    public function getRecheckReason(): ?string
+    {
+        return $this->get('recheck_reason');
+    }
+
+    public function setRecheckReason(?string $reason): static
+    {
+        return $this->set('recheck_reason', $reason);
     }
 
     public function getReferrer(): ?string
@@ -100,8 +201,30 @@ class AkismetMessage
         return $this->set('user_role', $role);
     }
 
+    public function addContext(string $context): static
+    {
+        $this->values['comment_context'][] = $context;
+
+        return $this;
+    }
+
+    public function clearContext(): static
+    {
+        $this->values['comment_context'] = [];
+
+        return $this;
+    }
+
     /**
-     * @return array<string, string>
+     * @return string[]
+     */
+    public function getContext(): array
+    {
+        return $this->values['comment_context'];
+    }
+
+    /**
+     * @return array<string, string|string[]>
      */
     public function getValues(): array
     {

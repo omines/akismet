@@ -93,7 +93,7 @@ class Akismet implements LoggerAwareInterface
     }
 
     /**
-     * @param array<string, string> $parameters
+     * @param array<string, string|string[]> $parameters
      */
     private function call(string $method, array $parameters = []): ResponseInterface
     {
