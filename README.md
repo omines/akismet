@@ -83,6 +83,18 @@ if ($response->isSpam()) {
 ```
 Read [their blog post](https://akismet.com/blog/theres-a-ninja-in-your-akismet/) on the 'should discard' feature.
 
+### Submitting confirmed ham and spam
+
+As mentioned above, when implementing moderation you can safely serialize the `AkismetMessage` instance submitted
+for checking. After human review you can then help improve Akismet's services by submitting the message as ham or spam:
+```php
+$response = $this->akismet->submitHam($message);
+$response = $this->akismet->submitSpam($message);
+```
+The `MessageResponse` object returned by these calls can, if you want, be checked for success with
+`$response->isSuccessful()`, in an asynchronous method this is technically not required - the methods are fire and
+forget.
+
 ### Asynchronous invocation
 
 When using `symfony/http-client` as the HTTP client implementation all calls are asynchronous out of the box. As such,
