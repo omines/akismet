@@ -110,7 +110,6 @@ currently in major version 0. It is to be considered stable and safe though, and
 once we believe the library API to be sufficiently stable.
 
 Currently on the to do list are:
- * Submit ham/spam call implementation
  * Diagnostic calls for usage and API limits
 
 If more people start using the library we will at some point also provide a Symfony Bundle and corresponding recipes
