@@ -17,7 +17,7 @@ use Omines\Akismet\AkismetMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-abstract class MessageResponse extends Response
+class MessageResponse extends Response
 {
     public function __construct(Akismet $akismet, ResponseInterface $httpResponse, ?LoggerInterface $logger, private readonly AkismetMessage $message)
     {

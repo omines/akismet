@@ -50,4 +50,9 @@ abstract class Response
 
         return $this->httpResponse->getContent();
     }
+
+    public function isSuccessful(): bool
+    {
+        return 200 === $this->httpResponse->getStatusCode();
+    }
 }

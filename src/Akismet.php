@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Omines\Akismet;
 
 use Omines\Akismet\API\CheckResponse;
+use Omines\Akismet\API\MessageResponse;
 use Omines\Akismet\API\VerifyKeyResponse;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -44,6 +45,16 @@ class Akismet implements LoggerAwareInterface
     public function check(AkismetMessage $message): CheckResponse
     {
         return new CheckResponse($this, $this->call('comment-check', $message->getValues()), $this->logger, $message);
+    }
+
+    public function submitHam(AkismetMessage $message): MessageResponse
+    {
+        return new MessageResponse($this, $this->call('submit-ham', $message->getValues()), $this->logger, $message);
+    }
+
+    public function submitSpam(AkismetMessage $message): MessageResponse
+    {
+        return new MessageResponse($this, $this->call('submit-spam', $message->getValues()), $this->logger, $message);
     }
 
     public function verifyKey(): VerifyKeyResponse

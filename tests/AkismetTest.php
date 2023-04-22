@@ -31,7 +31,6 @@ class AkismetTest extends TestCase
 
     public function testPropertiesAndOverrides(): void
     {
-        // During testing the default testing value is true
         $this->akismet->setTesting(false);
         $this->assertFalse($this->akismet->isTesting());
         $this->akismet->setTesting(true);
@@ -153,11 +152,14 @@ class AkismetTest extends TestCase
 
         $this->assertFalse($response->isSpam());
         $this->assertFalse($response->shouldDiscard());
+
+        $response = $this->akismet->submitHam($message);
+        $this->assertTrue($response->isSuccessful());
     }
 
     public function testSpamCommentCheck(): void
     {
-        $response = $this->akismet->check((new AkismetMessage())
+        $message = (new AkismetMessage())
             ->setUserIP('1.2.3.4')
             ->setAuthor('akismet-guaranteed-spam')
             ->setAuthorEmail('akismet-guaranteed-spam@example.com')
@@ -165,10 +167,15 @@ class AkismetTest extends TestCase
             ->setType(MessageType::REPLY)
             ->addContext('bbq')
             ->addContext('recipes')
-        );
+        ;
+
+        $response = $this->akismet->check($message);
 
         $this->assertTrue($response->isSpam());
         $this->assertFalse($response->shouldDiscard());
+
+        $response = $this->akismet->submitSpam($message);
+        $this->assertTrue($response->isSuccessful());
     }
 
     public function testLogging(): void
