@@ -178,6 +178,17 @@ class AkismetTest extends TestCase
         $this->assertTrue($response->isSuccessful());
     }
 
+    public function testUsageLimit(): void
+    {
+        $response = $this->akismet->usageLimit();
+        $this->assertIsInt($response->getUsage());
+        $this->assertIsFloat($response->getPercentage());
+        $this->assertIsBool($response->isThrottled());
+
+        // If this call doesn't crash it's working correctly
+        $response->getLimit();
+    }
+
     public function testLogging(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
