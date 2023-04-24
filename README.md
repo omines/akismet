@@ -83,6 +83,14 @@ if ($response->isSpam()) {
 ```
 Read [their blog post](https://akismet.com/blog/theres-a-ninja-in-your-akismet/) on the 'should discard' feature.
 
+### Asynchronous invocation
+
+When using `symfony/http-client` as the HTTP client implementation all calls are asynchronous out of the box. As such,
+in the example above, the call to `Akismet::check` is **not** blocking further execution. This allows you to improve
+your site performance by continuing to do other tasks in parallel, such as preparing notification emails and such.
+
+Execution will block when you call any informational methods on the response, in this case the `isSpam` method call.
+
 ### Submitting confirmed ham and spam
 
 As mentioned above, when implementing moderation you can safely serialize the `AkismetMessage` instance submitted
@@ -95,13 +103,15 @@ The `MessageResponse` object returned by these calls can, if you want, be checke
 `$response->isSuccessful()`, in an asynchronous method this is technically not required - the methods are fire and
 forget.
 
-### Asynchronous invocation
+### Usage limit
 
-When using `symfony/http-client` as the HTTP client implementation all calls are asynchronous out of the box. As such,
-in the example above, the call to `Akismet::check` is **not** blocking further execution. This allows you to improve
-your site performance by continuing to do other tasks in parallel, such as preparing notification emails and such.
-
-Execution will block when you call any informational methods on the response, in this case the `isSpam` method call.
+You can check your usage limits:
+```php
+$response = $this->akismet->usageLimit();
+if (null !== $response->getLimit() && $response->getUsage() > ($response->getLimit() / 2)) {
+    @trigger_error('Used up more than half the usage limit', E_USER_WARNING);
+}
+```
 
 ## To Do
 
@@ -109,11 +119,7 @@ This library is currently internally being tested for production use, changes ma
 currently in major version 0. It is to be considered stable and safe though, and we will stabilize the major version
 once we believe the library API to be sufficiently stable.
 
-Currently on the to do list are:
- * Diagnostic calls for usage and API limits
-
-If more people start using the library we will at some point also provide a Symfony Bundle and corresponding recipes
-for even easier integration.
+Currently only the [key/sites activity](https://akismet.com/key-sites-activity/) call is unsupported.
 
 ## Contributing
 
