@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Omines\Akismet;
 
+use Omines\Akismet\API\ActivityResponse;
 use Omines\Akismet\API\CheckResponse;
 use Omines\Akismet\API\MessageResponse;
 use Omines\Akismet\API\UsageLimitResponse;
@@ -41,6 +42,21 @@ class Akismet implements LoggerAwareInterface
         $this->client = $client->withOptions([
            'base_uri' => self::API_BASE_URI,
         ]);
+    }
+
+    public function activity(string $month = null, string $order = null, int $limit = null, int $offset = 0): ActivityResponse
+    {
+        if (null !== $month && !preg_match('#^2[0-1][0-9]{2}\-[0-1][0-9]$#', $month)) {
+            throw new \RuntimeException('Month must be null or in the format YYYY-MM');
+        }
+
+        return new ActivityResponse($this, $this->call('1.2/key-sites', [
+            'format' => 'json',
+            'month' => $month,
+            'order' => $order,
+            'limit' => $limit,
+            'offset' => $offset,
+        ]), $this->logger);
     }
 
     public function check(AkismetMessage $message): CheckResponse
@@ -110,7 +126,7 @@ class Akismet implements LoggerAwareInterface
     }
 
     /**
-     * @param array<string, string|string[]> $parameters
+     * @param array<string, int|string|string[]|null> $parameters
      */
     private function call(string $method, array $parameters = []): ResponseInterface
     {

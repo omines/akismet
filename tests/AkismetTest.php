@@ -178,6 +178,18 @@ class AkismetTest extends TestCase
         $this->assertTrue($response->isSuccessful());
     }
 
+    public function testActivity(): void
+    {
+        $response = $this->akismet->activity();
+        $this->assertIsInt($response->getLimit());
+        $this->assertIsInt($response->getOffset());
+        $this->assertIsInt($response->getTotal());
+        $this->assertIsArray($response->getMonths());
+
+        $this->expectExceptionMessage('format');
+        $this->akismet->activity('invalid-month-string');
+    }
+
     public function testUsageLimit(): void
     {
         $response = $this->akismet->usageLimit();

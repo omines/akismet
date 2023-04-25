@@ -103,23 +103,26 @@ The `MessageResponse` object returned by these calls can, if you want, be checke
 `$response->isSuccessful()`, in an asynchronous method this is technically not required - the methods are fire and
 forget.
 
-### Usage limit
+### Usage limit and activity
 
-You can check your usage limits:
+You can check your usage limits and key/site activity:
 ```php
 $response = $this->akismet->usageLimit();
-if (null !== $response->getLimit() && $response->getUsage() > ($response->getLimit() / 2)) {
+if ($response->getPercentage() > 50) {
     @trigger_error('Used up more than half the usage limit', E_USER_WARNING);
 }
+$response = $this->akismet->activity(limit: 100);
+foreach ($response->getMonths() as $month => $activities) {
+   // Do stuff
+}
 ```
+For the parameters and response formats of the activity call refer to [the Akismet documentation](https://akismet.com/key-sites-activity/).
 
 ## To Do
 
 This library is currently internally being tested for production use, changes may be necessary, hence the library is
 currently in major version 0. It is to be considered stable and safe though, and we will stabilize the major version
 once we believe the library API to be sufficiently stable.
-
-Currently only the [key/sites activity](https://akismet.com/key-sites-activity/) call is unsupported.
 
 ## Contributing
 
