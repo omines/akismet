@@ -5,7 +5,7 @@
 [![License](https://poser.pugx.org/omines/akismet/license)](https://packagist.org/packages/omines/akismet)
 
 This library provides a straightforward object oriented and pluggable implementation of the well known online Akismet
-spam detection service.
+spam detection service. All known features and calls are implemented.
 
 ## Documentation
 
@@ -22,7 +22,7 @@ Easiest is to install the [Symfony HTTP Client component](https://symfony.com/do
 composer require symfony/http-client
 ```
 When using the Symfony framework this will provide a configurable service you can inject where needed, otherwise you 
-can instantiate a client using:
+can instantiate a stock client using:
 ```php
 $httpClient = HttpClient::create();
 ```
@@ -93,7 +93,7 @@ Execution will block when you call any informational methods on the response, in
 
 ### Submitting confirmed ham and spam
 
-As mentioned above, when implementing moderation you can safely serialize the `AkismetMessage` instance submitted
+As mentioned before, when implementing moderation you can safely serialize the `AkismetMessage` instance submitted
 for checking. After human review you can then help improve Akismet's services by submitting the message as ham or spam:
 ```php
 $response = $this->akismet->submitHam($message);
@@ -118,12 +118,6 @@ foreach ($response->getMonths() as $month => $activities) {
 ```
 For the parameters and response formats of the activity call refer to [the Akismet documentation](https://akismet.com/key-sites-activity/).
 
-## To Do
-
-This library is currently internally being tested for production use, changes may be necessary, hence the library is
-currently in major version 0. It is to be considered stable and safe though, and we will stabilize the major version
-once we believe the library API to be sufficiently stable.
-
 ## Contributing
 
 Contributions are **welcome** and will be credited.
@@ -133,6 +127,8 @@ Follow [good standards](http://www.phptherightway.com/), keep the [PHPStan level
 and keep the test coverage at 100%.
 
 Before committing, run `bin/prepare-commit` to automatically follow coding standards, run PHPStan and run all tests.
+To run the live tests create a `.env.local` defining `AKISMET_KEY`. As they run in test mode they will not interfere
+with your quota or get you banned.
 
 ## Legal
 
