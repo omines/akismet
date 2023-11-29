@@ -26,6 +26,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class AkismetTest extends TestCase
 {
     private static string $apiKey;
+    private static string $site;
 
     private Akismet $akismet;
 
@@ -217,7 +218,7 @@ class AkismetTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->akismet = new Akismet(HttpClient::create(), self::$apiKey, 'https://www.example.org/', true);
+        $this->akismet = new Akismet(HttpClient::create(), self::$apiKey, self::$site, true);
     }
 
     public static function setUpBeforeClass(): void
@@ -228,5 +229,6 @@ class AkismetTest extends TestCase
             throw new \LogicException('Make sure the AKISMET_KEY env variable is set either through a .env.local file or actual environment variables');
         }
         self::$apiKey = $_ENV['AKISMET_KEY'];
+        self::$site = $_ENV['AKISMET_SITE'] ?? 'https://www.example.org/';
     }
 }

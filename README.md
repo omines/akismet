@@ -123,7 +123,7 @@ For the parameters and response formats of the activity call refer to [the Akism
 Contributions are **welcome** and will be credited.
 
 We accept contributions via Pull Requests on [Github](https://github.com/omines/akismet).
-Follow [good standards](http://www.phptherightway.com/), keep the [PHPStan level](https://phpstan.org/user-guide/rule-levels) at 9,
+Follow [good standards](http://www.phptherightway.com/), keep the [PHPStan level](https://phpstan.org/user-guide/rule-levels) maxed,
 and keep the test coverage at 100%.
 
 Before committing, run `bin/prepare-commit` to automatically follow coding standards, run PHPStan and run all tests.
