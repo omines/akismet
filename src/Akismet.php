@@ -33,18 +33,18 @@ class Akismet implements LoggerAwareInterface
     private ?string $instance;
     private bool $isTesting;
 
-    public function __construct(HttpClientInterface $client, string $apiKey = null, string $instance = null, bool $isTesting = false)
+    public function __construct(HttpClientInterface $client, ?string $apiKey = null, ?string $instance = null, bool $isTesting = false)
     {
         $this->apiKey = $apiKey;
         $this->instance = $instance;
         $this->isTesting = $isTesting;
 
         $this->client = $client->withOptions([
-           'base_uri' => self::API_BASE_URI,
+            'base_uri' => self::API_BASE_URI,
         ]);
     }
 
-    public function activity(string $month = null, string $order = null, int $limit = null, int $offset = 0): ActivityResponse
+    public function activity(?string $month = null, ?string $order = null, ?int $limit = null, int $offset = 0): ActivityResponse
     {
         if (null !== $month && !preg_match('#^2[0-1][0-9]{2}\-[0-1][0-9]$#', $month)) {
             throw new \RuntimeException('Month must be null or in the format YYYY-MM');

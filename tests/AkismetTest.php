@@ -90,6 +90,7 @@ class AkismetTest extends TestCase
         $this->assertSame('edit', $message->getRecheckReason());
         $this->assertSame('https://www.google.com', $message->getReferrer());
         $this->assertSame(MessageType::BLOG_POST, $message->getType());
+        $this->assertSame(MessageType::BLOG_POST->value, $message->getTypeAsString());
         $this->assertSame('Custom Browser 684', $message->getUserAgent());
         $this->assertSame('guest', $message->getUserRole());
         $this->assertSame('12.34.56.78', $message->getUserIP());
@@ -106,6 +107,9 @@ class AkismetTest extends TestCase
 
         $message->setReferrer(null);
         $this->assertNull($message->getReferrer());
+
+        $message->setTypeAsString('foo');
+        $this->assertSame('foo', $message->getTypeAsString());
     }
 
     public function testPSR7Integration(): void

@@ -166,9 +166,19 @@ class AkismetMessage
         return MessageType::tryFrom($this->get('comment_type') ?? '');
     }
 
+    public function getTypeAsString(): ?string
+    {
+        return $this->get('comment_type');
+    }
+
     public function setType(?MessageType $type): static
     {
         return $this->set('comment_type', $type?->value);
+    }
+
+    public function setTypeAsString(?string $type): static
+    {
+        return $this->set('comment_type', $type);
     }
 
     public function getUserAgent(): ?string

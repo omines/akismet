@@ -1,6 +1,7 @@
 /.idea
 /.*.cache
 /.env.local
+/build
 /composer.lock
 /tmp
 /vendor
