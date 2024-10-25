@@ -65,7 +65,7 @@ class ActivityResponse extends Response
             $this->offset = intval($decoded['offset']);
             $this->total = intval($decoded['total']);
 
-            $this->months = array_filter($decoded, fn ($k) => preg_match('#^[0-9]{4}\-[0-9]{2}$#', $k), ARRAY_FILTER_USE_KEY);
+            $this->months = array_filter($decoded, fn ($k) => (bool) preg_match('#^[0-9]{4}\-[0-9]{2}$#', $k), ARRAY_FILTER_USE_KEY);
             $this->parsed = true;
         }
     }
