@@ -17,7 +17,7 @@
     "require": {
         "php": ">=8.1",
         "psr/log": "^3.0",
-        "symfony/http-client-contracts": "^3"
+        "symfony/http-client-contracts": "^6"
     },
     "require-dev": {
         "ext-json": "*",
