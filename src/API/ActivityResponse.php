@@ -57,7 +57,8 @@ class ActivityResponse extends Response
     private function parse(): void
     {
         if (!$this->parsed) {
-            if (!is_array($decoded = \json_decode($this->getContent(), true))) {
+            $decoded = \json_decode($this->getContent(), true);
+            if (!is_array($decoded)) {
                 throw new \LogicException('Malformed response to Akismet key/site activity call'); // @codeCoverageIgnore
             }
 
