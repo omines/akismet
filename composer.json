@@ -1,7 +1,7 @@
 {
     "name": "omines/akismet",
     "type": "library",
-    "description": "Open source library for using the Wordpress Akismet anti spam service",
+    "description": "Open source library for using Automattic's Akismet anti-spam service",
     "keywords": ["akismet","spam", "spamfilter", "antispam", "api"],
     "license": "MIT",
     "authors": [
